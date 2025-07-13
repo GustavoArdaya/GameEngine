@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Core.h"
+
 namespace Hazel
 {
-	class Application
+	class HAZEL_API Application
 	{
 	public:
 		Application();
