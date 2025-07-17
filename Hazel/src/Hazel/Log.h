@@ -1,6 +1,6 @@
 #pragma once
-
-#include <memory.h>
+#pragma warning(push)
+#pragma warning(disable: 4251)
 #include "Core.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
@@ -18,10 +18,13 @@ namespace Hazel
 
 	private:
 
+		// Marking the shared_ptr with HAZEL_API to ensure proper DLL interface
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
 	};
 }
+
+#pragma warning(pop)
 
 // Core log macros
 #define HZ_CORE_TRACE(...)		::Hazel::Log::GetCoreLogger()->trace(__VA_ARGS__)
@@ -36,4 +39,3 @@ namespace Hazel
 #define HZ_WARN(...)			::Hazel::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define HZ_ERROR(...)			::Hazel::Log::GetClientLogger()->error(__VA_ARGS__)
 #define HZ_FATAL(...)			::Hazel::Log::GetClientLogger()->critical(__VA_ARGS__)
-

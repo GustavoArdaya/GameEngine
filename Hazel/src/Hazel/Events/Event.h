@@ -2,10 +2,6 @@
 
 #include "Hazel/Core.h"  
 
-#include <string>  
-#include <functional>
-//#include "spdlog/fmt/bundled/format.h"
-
 namespace Hazel  
 {  
 	// Bloquing Events  
