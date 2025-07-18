@@ -11,9 +11,14 @@ namespace Hazel
 	public:
 		Application();
 		virtual ~Application();
+
 		void Run();
 
+		void OnEvent(Event& e);
+
 	private:
+
+		bool OnWindowClose(class WindowCloseEvent& e);
 
 		std::unique_ptr<class Window> m_Window;
 		bool m_Running = true;
