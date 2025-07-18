@@ -16,12 +16,10 @@ IncludeDir["GLFW"] = "Hazel/vendor/GLFW/include"
 include "Hazel/vendor/GLFW"
 
 project "Hazel"
+
 	location "Hazel"
 	kind "SharedLib"
 	language "C++"
-	cppdialect "C++17"
-	systemversion "latest"
-	buildoptions { "/utf-8" }
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -48,29 +46,33 @@ project "Hazel"
 		"opengl32.lib"
 	}
 
-	defines { "HZ_PLATFORM_WINDOWS", "HZ_BUILD_DLL" }
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+		buildoptions { "/utf-8" }
 
-	postbuildcommands
-	{
-		("{COPY} %{cfg.buildtarget.relpath} ../bin/"  .. outputdir .. "/Sandbox")
-	}
+		defines
+		{
+			"HZ_PLATFORM_WINDOWS", 
+			"HZ_BUILD_DLL"
+		}
+
+		postbuildcommands
+		{
+			("{COPY} %{cfg.buildtarget.relpath} ../bin/"  .. outputdir .. "/Sandbox")
+		}
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
-		runtime "Debug"
-		staticruntime "on"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
-		runtime "Release"
-		staticruntime "on"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "HZ_DIST"
-		runtime "Release"
-		staticruntime "on"
 		optimize "On"
 		
 project "Sandbox"
@@ -100,7 +102,7 @@ project "Sandbox"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "on"
+		staticruntime "On"
 		systemversion "latest"
 		buildoptions { "/utf-8" }
 
