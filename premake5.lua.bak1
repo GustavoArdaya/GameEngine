@@ -1,11 +1,10 @@
 workspace "Hazel"
 	architecture "x64"
-
-	configurations
-	{
-		"Debug",
-		"Release",
-		"Dist"
+	configurations 
+	{ 
+		"Debug", 
+		"Release", 
+		"Dist" 
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -20,6 +19,8 @@ project "Hazel"
 	location "Hazel"
 	kind "SharedLib"
 	language "C++"
+	cppdialect "C++17"
+	systemversion "latest"
 	buildoptions { "/utf-8" }
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -28,10 +29,10 @@ project "Hazel"
 	pchheader "hzpch.h"
 	pchsource "Hazel/src/hzpch.cpp"
 
-	files
+	files 
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
 	}
 
 	includedirs
@@ -41,62 +42,52 @@ project "Hazel"
 		"%{IncludeDir.GLFW}"
 	}
 
-	links 
-	{ 
+	links
+	{
 		"GLFW",
 		"opengl32.lib"
 	}
 
-	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
-		systemversion "latest"
+	defines { "HZ_PLATFORM_WINDOWS", "HZ_BUILD_DLL" }
 
-		defines
-		{
-			"HZ_PLATFORM_WINDOWS",
-			"HZ_BUILD_DLL"
-		}
-
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
-		}
+	postbuildcommands
+	{
+		("{COPY} %{cfg.buildtarget.relpath} ../bin/"  .. outputdir .. "/Sandbox")
+	}
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
-		--buildoptions "/MDd"
-		staticruntime "off"
-runtime "Debug"
+		runtime "Debug"
+		staticruntime "on"
+		--buildoptions { "/MDd" }
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
-		--buildoptions "/MD"
-		staticruntime "off"
 		runtime "Release"
+		staticruntime "on"
+		--buildoptions { "/MD" }
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "HZ_DIST"
-		--buildoptions "/MD"
-		staticruntime "off"
 		runtime "Release"
+		staticruntime "on"
+		--buildoptions { "/MD" }
 		optimize "On"
-
+		
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
-	buildoptions { "/utf-8" }
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	files
+	files 
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
 	}
 
 	includedirs
@@ -112,8 +103,9 @@ project "Sandbox"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
+		staticruntime "on"
 		systemversion "latest"
+		buildoptions { "/utf-8" }
 
 		defines
 		{
@@ -122,21 +114,15 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
-		--buildoptions "/MDd"
-		staticruntime "off"
-		runtime "Debug"
 		symbols "On"
+		--buildoptions { "/MDd" }
 
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
-		--buildoptions "/MD"
-		staticruntime "off"
-		runtime "Release"
 		optimize "On"
+		--buildoptions { "/MD" }
 
 	filter "configurations:Dist"
 		defines "HZ_DIST"
-		--buildoptions "/MD"
-		staticruntime "off"
-		runtime "Release"
 		optimize "On"
+		--buildoptions { "/MD" }
