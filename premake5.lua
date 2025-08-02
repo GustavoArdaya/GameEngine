@@ -28,9 +28,11 @@ group ""
 
 project "Hazel"
 	location "Hazel"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	cppdialect "C++17"
 	buildoptions { "/utf-8" }
+	staticruntime "On"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -44,6 +46,11 @@ project "Hazel"
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
+	}
+
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	includedirs
@@ -64,9 +71,8 @@ project "Hazel"
 		"opengl32.lib"
 	}
 
-	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
+	filter "system:windows"		
+		--staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -76,29 +82,24 @@ project "Hazel"
 			"GLFW_INCLUDE_NONE"
 		}
 
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
-		}
-
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
 		--buildoptions "/MDd"
-		staticruntime "off"
-runtime "Debug"
+		--staticruntime "off"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
 		--buildoptions "/MD"
-		staticruntime "off"
+		--staticruntime "off"
 		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "HZ_DIST"
 		--buildoptions "/MD"
-		staticruntime "off"
+		--staticruntime "off"
 		runtime "Release"
 		optimize "On"
 
@@ -106,6 +107,8 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "On"
 	buildoptions { "/utf-8" }
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -131,7 +134,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "latest"
 
@@ -143,20 +145,20 @@ project "Sandbox"
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
 		--buildoptions "/MDd"
-		staticruntime "off"
+		--staticruntime "off"
 		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "HZ_RELEASE"
 		--buildoptions "/MD"
-		staticruntime "off"
+		--staticruntime "off"
 		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "HZ_DIST"
 		--buildoptions "/MD"
-		staticruntime "off"
+		--staticruntime "off"
 		runtime "Release"
 		optimize "On"
